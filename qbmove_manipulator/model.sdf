@@ -1,0 +1,162 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="qbmove_manipulator">
+
+    <link name = "base_link">
+      <pose>0 0 -0.055 0 0 0</pose>
+      <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>30</mass>
+          <inertia>
+            <ixx>30</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>30</iyy>
+            <iyz>0</iyz>
+            <izz>30</izz>
+          </inertia>
+        </inertial>
+        <collision name="base_link_collision">
+          <pose>0 0.055 -0.055 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="base_link_visual">
+           <pose>0 0.055 -0.055 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 0.2 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+    </link>
+   
+    <link  name="fixed_link">
+      <pose>0 0 0.012 0 0 0</pose>
+      <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>10</mass>
+          <inertia>
+            <ixx>10</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>10</iyy>
+            <iyz>0</iyz>
+            <izz>10</izz>
+          </inertia>
+        </inertial>
+        <collision name="fixed_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.055 0.055 0.25</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="fixed_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.055 0.055 0.25</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+    </link>
+
+    <include>
+      <uri>model://qbmove_inertial</uri>
+      <pose>0.0 0.028 0.065 -1.57 -1.57 0</pose>
+      <name>qbmove_1</name>
+    </include>
+    <plugin name="plugin_qbmove_1" filename="build/libqbmove_multiple.so" >  
+      <model_qbmove_1>qbmove_1</model_qbmove_1>
+    </plugin>
+
+    <include>
+      <uri>model://qbmove_inertial</uri>     
+      <pose>0.0 0.117 0.065 -1.57 -1.57 0</pose>
+      <name>qbmove_2</name>
+    </include>
+    <plugin name="plugin_qbmove_2" filename="build/libqbmove_multiple.so" >  
+      <model_qbmove_2>qbmove_2</model_qbmove_2>
+    </plugin> 
+
+    <include>
+      <uri>model://qbmove_inertial</uri>     
+      <pose>0.0 0.206 0.065 -1.57 -1.57 0</pose>
+      <name>qbmove_3</name>
+    </include>
+    <plugin name="plugin_qbmove_3" filename="build/libqbmove_multiple.so" >  
+      <model_qbmove_2>qbmove_3</model_qbmove_2>
+    </plugin>
+
+   <!---JOINTS-->
+    
+    <joint name="base_joint" type="revolute">
+        <parent>base_link</parent>
+        <child>fixed_link</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+        </axis>
+    </joint>
+   
+     <joint name="fixed_joint" type="revolute">
+        <parent>fixed_link</parent>
+        <child>qbmove_1::cube</child>
+        <pose>0 0 0.085 0 0 0</pose>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+        </axis>
+    </joint>
+
+    <joint name="arm_gripper_joint_1" type="revolute">
+      <parent>qbmove_1::flange</parent>
+      <child>qbmove_2::cube</child>
+      <pose>0 0.028 0.065 0 0 0</pose>
+      <axis>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+        </limit>
+        <xyz>0 1 0</xyz>
+      </axis>
+    </joint>
+
+    <joint name="arm_gripper_joint_2" type="revolute">
+      <parent>qbmove_2::flange</parent>
+      <child>qbmove_3::cube</child>
+      <pose>0 0.117 0.065 0 0 0</pose>
+      <axis>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+        </limit>
+        <xyz>0 1 0</xyz>
+      </axis>
+    </joint>
+
+  </model>
+</sdf>
